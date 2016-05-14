@@ -5,18 +5,19 @@
 ## Login   <proqui_g@epitech.net>
 ## 
 ## Started on  Sat May  7 17:40:43 2016 Guillaume PROQUIN
-## Last update Thu May 12 14:46:53 2016 Guillaume PROQUIN
+## Last update Sat May 14 16:35:51 2016 Guillaume PROQUIN
 ##
 
 NAME		= server
 
 SRC		= src/my_ftp.c		\
 		src/parser.c		\
+		src/get_next_line.c	\
 		src/cmd.c		\
 		src/client.c		\
 		src/fn_dir.c		\
 		src/fn_client.c		\
-		src/get_next_line.c
+		src/fn_mode.c
 
 OBJ		= $(SRC:.c=.o)
 
