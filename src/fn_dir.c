@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 12:46:42 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:41:20 2016 Guillaume PROQUIN
+** Last update Sat May 14 19:44:04 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -40,24 +40,19 @@ void		fn_list(const char **cmds, t_client *client)
   int			fd;
 
   ss = sizeof(s);
-  if (client->port != -1)
+  dprintf(client->fd, "150 Here comes the directory listing.\r\n");
+  if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
+    return ;
+  if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
     {
-      dprintf(client->fd, "150 Here comes the directory listing.\r\n");
-      if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
-	return ;
-      if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
-	{
-	  old_fd = dup(1);
-	  dup2(fd, 1);
-	  if (!fork())
-	    execlp("/bin/ls", "/bin/ls", "-l", cmds[1], NULL);
-	  dup2(old_fd, 1);
-	  fn_close(client, fd);
-	}
-      dprintf(client->fd, "226 Directory send OK.\r\n");
+      old_fd = dup(1);
+      dup2(fd, 1);
+      if (!fork())
+	execlp("/bin/ls", "/bin/ls", "-l", cmds[1], NULL);
+      dup2(old_fd, 1);
+      fn_close(client, fd);
     }
-  else
-    dprintf(client->fd, "425 Use PORT or PASV first.\r\n");
+  dprintf(client->fd, "226 Directory send OK.\r\n");
 }
 
 void	fn_dele(const char **cmds, t_client *client)

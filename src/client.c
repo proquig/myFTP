@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Thu May 12 10:23:50 2016 Guillaume PROQUIN
-** Last update Sat May 14 17:57:31 2016 Guillaume PROQUIN
+** Last update Sat May 14 19:47:16 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -23,7 +23,7 @@ void		init_client(struct sockaddr_in *sock,int fd)
   client.sock = sock;
   client.mode = NONE;
 
-  dprintf(client.fd, "220 \r\n");
+  dprintf(client.fd, "220 Welcome.\r\n");
   read_cmd(&client);
 }
 

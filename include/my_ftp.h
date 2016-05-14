@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May  7 17:31:28 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:28:16 2016 Guillaume PROQUIN
+** Last update Sat May 14 19:48:36 2016 Guillaume PROQUIN
 */
 
 #ifndef			__MY_FTP_H__
@@ -17,12 +17,16 @@
 # include		<string.h>
 # include		<signal.h>
 # include		<dirent.h>
+# include		<netdb.h>
+# include		<fcntl.h>
+# include		<sys/stat.h>
 # include		<sys/types.h>
 # include		<sys/socket.h>
-# include		<netdb.h>
 # include		<netinet/in.h>
 # include		<arpa/inet.h>
 # include		"get_next_line.h"
+
+# define		BUFFER_SIZE	1024
 
 typedef enum
 {
@@ -78,5 +82,8 @@ void			fn_quit(const char **cmds, t_client *client);
 int			fn_listen(t_client *client);
 void			fn_close(t_client *client, int fd);
 void			fn_pasv(char **cmds, t_client *client);
+
+void			fn_tsfr(char **cmds, t_client *client);
+void			fn_retr(char **cmds, t_client *client);
 
 #endif
