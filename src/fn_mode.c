@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Fri May 13 17:11:20 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:20:11 2016 Guillaume PROQUIN
+** Last update Sat May 14 18:47:21 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -60,7 +60,7 @@ void	fn_pasv(char **cmds, t_client *client)
 	ip[i] = (ip[i] == '.') ? ',' : ip[i];
       client->mode = PASV;
       printf("%d\n", client->port);
-      dprintf(client->fd, "Entering Passive Mode (%s,%d,%d)\r\n",	\
+      dprintf(client->fd, "227 Entering Passive Mode (%s,%d,%d).\r\n",	\
 	      ip, (client->port / 256), (client->port % 256));
     }
 }
