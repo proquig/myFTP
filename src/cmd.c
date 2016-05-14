@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 14:28:54 2016 Guillaume PROQUIN
-** Last update Sat May 14 19:47:51 2016 Guillaume PROQUIN
+** Last update Sat May 14 21:18:50 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -23,6 +23,7 @@ void	*get_fn(const char *cmd, t_client *client)
     {"PASV", &fn_pasv, (void*)-1},
     {"LIST", &fn_tsfr, (void*)-1},
     {"RETR", &fn_tsfr, (void*)-1},
+    {"STOR", &fn_tsfr, (void*)-1},
     {"QUIT", &fn_quit, NULL},
     {"USER", &fn_login, NULL},
     {"PASS", &fn_pass, NULL},
