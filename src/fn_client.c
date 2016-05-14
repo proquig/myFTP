@@ -5,12 +5,12 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Thu May 12 11:09:36 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:24:29 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:51:55 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
 
-void		fn_login(const char **cmds, t_client *client)
+void	fn_login(const char **cmds, t_client *client)
 {
   if (!cmds[1])
     dprintf(client->fd, "530 Permission denied.\r\n");
@@ -21,7 +21,7 @@ void		fn_login(const char **cmds, t_client *client)
     }
 }
 
-void		fn_pass(const char **cmds, t_client *client)
+void	fn_pass(const char **cmds, t_client *client)
 {
   (void)cmds;
   if (!client->user)
@@ -35,7 +35,7 @@ void		fn_pass(const char **cmds, t_client *client)
     dprintf(client->fd, "530 Login incorrect.\r\n");
 }
 
-void		fn_quit(const char **cmds, t_client *client)
+void	fn_quit(const char **cmds, t_client *client)
 {
   (void)cmds;
   dprintf(client->fd, "221 Goodbye.\r\n");

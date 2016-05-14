@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 12:46:42 2016 Guillaume PROQUIN
-** Last update Sat May 14 19:44:04 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:50:47 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -21,38 +21,13 @@ void	fn_pwd(const char **cmds, t_client *client)
 
 void	fn_cwd(const char **cmds, t_client *client)
 {
-  (void)client;
-  if(chdir(strcmp("CWD", cmds[0]) ? ".." : cmds[1]))
+  if (chdir(strcmp("CWD", cmds[0]) ? ".." : cmds[1]))
     dprintf(client->fd, "501 Failed to change directory.\r\n");
   else
     if (!strcmp("CWD", cmds[0]))
       dprintf(client->fd, "250 Directory successfully changed.\r\n");
     else
       dprintf(client->fd, "200 Directory successfully changed.\r\n");
-}
-
-void		fn_list(const char **cmds, t_client *client)
-{
-  struct sockaddr_in	s;
-  socklen_t		ss;
-  char			path[1024];
-  int			old_fd;
-  int			fd;
-
-  ss = sizeof(s);
-  dprintf(client->fd, "150 Here comes the directory listing.\r\n");
-  if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
-    return ;
-  if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
-    {
-      old_fd = dup(1);
-      dup2(fd, 1);
-      if (!fork())
-	execlp("/bin/ls", "/bin/ls", "-l", cmds[1], NULL);
-      dup2(old_fd, 1);
-      fn_close(client, fd);
-    }
-  dprintf(client->fd, "226 Directory send OK.\r\n");
 }
 
 void	fn_dele(const char **cmds, t_client *client)

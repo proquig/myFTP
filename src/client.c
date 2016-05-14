@@ -1,16 +1,16 @@
 /*
-** client.c for my_ftp in /home/proqui_g/rendu/PSU_2015_myftp/include
+** client.c for my_ftp in /home/proqui_g/rendu/PSU_2015_myftp/src
 ** 
 ** Made by Guillaume PROQUIN
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Thu May 12 10:23:50 2016 Guillaume PROQUIN
-** Last update Sat May 14 19:47:16 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:47:22 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
 
-void		init_client(struct sockaddr_in *sock,int fd)
+void		init_client(struct sockaddr_in *sock, int fd)
 {
   t_client	client;
 

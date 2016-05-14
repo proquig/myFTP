@@ -5,32 +5,10 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May  7 17:40:23 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:26:11 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:53:51 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
-
-int			is_number(const char *str)
-{
-  int	i;
-
-  i = -1;
-  while (str[++i] && str[i] >= '0' && str[i] <= '9');
-  return (!str[i]);
-}
-
-void			put_error(const char *msg)
-{
-  fprintf(stderr, "%s\n", msg);
-  exit(1);
-}
-
-void			close_fd(int fd, const char *msg)
-{
-  close(fd);
-  if (msg)
-    put_error(msg);
-}
 
 int			init_ftp(int port)
 {
@@ -74,7 +52,7 @@ void			my_ftp(int port, const char *path)
   close(fd_ftp);
 }
 
-int		main(int ac, const char **av)
+int			main(int ac, const char **av)
 {
   if (ac == 3 && atoi(av[1]) >= 0)
     my_ftp(atoi(av[1]), av[2]);

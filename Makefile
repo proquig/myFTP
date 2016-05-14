@@ -5,7 +5,7 @@
 ## Login   <proqui_g@epitech.net>
 ## 
 ## Started on  Sat May  7 17:40:43 2016 Guillaume PROQUIN
-## Last update Sat May 14 19:23:41 2016 Guillaume PROQUIN
+## Last update Sat May 14 22:48:49 2016 Guillaume PROQUIN
 ##
 
 NAME		= server
@@ -18,7 +18,8 @@ SRC		= src/my_ftp.c		\
 		src/fn_dir.c		\
 		src/fn_client.c		\
 		src/fn_mode.c		\
-		src/fn_tsfr.c
+		src/fn_tsfr.c		\
+		src/utils.c
 
 OBJ		= $(SRC:.c=.o)
 

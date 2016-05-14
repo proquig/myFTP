@@ -5,16 +5,16 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May 14 18:56:21 2016 Guillaume PROQUIN
-** Last update Sat May 14 21:33:20 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:53:14 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
 
-void	fn_tsfr(char **cmds, t_client *client)
+void			fn_tsfr(char **cmds, t_client *client)
 {
-  int	i;
-  void	(*f)(char**, t_client*);
-  void	*fn[][2] = {
+  int			i;
+  void			(*f)(char**, t_client*);
+  void			*fn[][2] = {
     {"LIST", &fn_list},
     {"RETR", &fn_retr},
     {"STOR", &fn_stor},
@@ -29,7 +29,31 @@ void	fn_tsfr(char **cmds, t_client *client)
     dprintf(client->fd, "425 Use PORT or PASV first.\r\n");
 }
 
-void	fn_retr(char **cmds, t_client *client)
+void			fn_list(const char **cmds, t_client *client)
+{
+  struct sockaddr_in	s;
+  socklen_t		ss;
+  char			path[1024];
+  int			old_fd;
+  int			fd;
+
+  ss = sizeof(s);
+  dprintf(client->fd, "150 Here comes the directory listing.\r\n");
+  if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
+    return ;
+  if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
+    {
+      old_fd = dup(1);
+      dup2(fd, 1);
+      if (!fork())
+	execlp("/bin/ls", "/bin/ls", "-l", cmds[1], NULL);
+      dup2(old_fd, 1);
+      fn_close(client, fd);
+    }
+  dprintf(client->fd, "226 Directory send OK.\r\n");
+}
+
+void			fn_retr(char **cmds, t_client *client)
 {
   struct sockaddr_in	s;
   socklen_t		ss;
@@ -54,7 +78,7 @@ void	fn_retr(char **cmds, t_client *client)
     dprintf(client->fd, "227 Failed to open file.\r\n");
 }
 
-void		fn_stor(char **cmds, t_client *client)
+void			fn_stor(char **cmds, t_client *client)
 {
   struct sockaddr_in	s;
   socklen_t		ss;
@@ -64,7 +88,8 @@ void		fn_stor(char **cmds, t_client *client)
   int			size;
 
   ss = sizeof(s);
-  if (cmds[1] && (file_fd = open(cmds[1], O_CREAT | O_TRUNC | O_WRONLY, 0600)) != -1)
+  if (cmds[1] \
+      &&(file_fd = open(cmds[1], O_CREAT | O_TRUNC | O_WRONLY, 0600)) != -1)
     {
       if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
 	return ;

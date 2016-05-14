@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Fri May 13 17:11:20 2016 Guillaume PROQUIN
-** Last update Sat May 14 18:47:21 2016 Guillaume PROQUIN
+** Last update Sat May 14 22:52:37 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -37,7 +37,7 @@ int			fn_listen(t_client *client)
   return (1);
 }
 
-void	fn_close(t_client *client, int fd)
+void			fn_close(t_client *client, int fd)
 {
   close(client->m_fd);
   close(fd);
@@ -46,10 +46,10 @@ void	fn_close(t_client *client, int fd)
   client->mode = NONE;
 }
 
-void	fn_pasv(char **cmds, t_client *client)
+void			fn_pasv(char **cmds, t_client *client)
 {
-  char	ip[16];
-  int	i;
+  char			ip[16];
+  int			i;
 
   (void)cmds;
   if (fn_listen(client))
