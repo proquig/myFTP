@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Thu May 12 11:09:36 2016 Guillaume PROQUIN
-** Last update Thu May 12 15:47:46 2016 Guillaume PROQUIN
+** Last update Sat May 14 18:24:29 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -39,8 +39,7 @@ void		fn_quit(const char **cmds, t_client *client)
 {
   (void)cmds;
   dprintf(client->fd, "221 Goodbye.\r\n");
-  shutdown(client->fd, SHUT_RDWR);
-  close(client->fd);
+  printf("%d\n", close(client->fd));
   if (client->user)
     free(client->user);
   exit(0);

@@ -5,53 +5,78 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 12:46:42 2016 Guillaume PROQUIN
-** Last update Thu May 12 13:41:46 2016 Guillaume PROQUIN
+** Last update Sat May 14 18:27:48 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
 
-int	fn_pwd(const char **cmds, t_client *client)
+void	fn_pwd(const char **cmds, t_client *client)
 {
   char	path[1024];
 
   (void)cmds;
   if (getcwd(path, sizeof(path)))
     dprintf(client->fd, "257 \"%s\"\r\n", path);
-  return (1);
 }
 
-int	fn_cwd(const char **cmds, t_client *client)
+void	fn_cwd(const char **cmds, t_client *client)
 {
   (void)client;
-  //if (!strcmp("CDUP", cmds[0]))
   if(chdir(strcmp("CWD", cmds[0]) ? ".." : cmds[1]))
     dprintf(client->fd, "550 Failed to change directory.\r\n");
   else
-    dprintf(client->fd, "250 Directory successfully changed.\r\n");
-  return (1);
-  //return (!chdir(cmds[1]));
+    if (!strcmp("CWD", cmds[0]))
+      dprintf(client->fd, "250 Directory successfully changed.\r\n");
+    else
+      dprintf(client->fd, "200 Directory successfully changed.\r\n");
 }
 
-int	fn_noop(const char **cmds, t_client *client)
+void		fn_list(const char **cmds, t_client *client)
+{
+  struct sockaddr_in	s;
+  socklen_t		ss;
+  char			path[1024];
+  int			old_fd;
+  int			fd;
+
+  ss = sizeof(s);
+  if (client->port != -1)
+    {
+      dprintf(client->fd, "150 Here comes the directory listing.\r\n");
+      if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
+	return ;
+      if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
+	{
+	  old_fd = dup(1);
+	  dup2(fd, 1);
+	  if (!fork())
+	    execlp("/bin/ls", "/bin/ls", "-l", cmds[1], NULL);
+	  dup2(old_fd, 1);
+	  fn_close(client, fd);
+	}
+      dprintf(client->fd, "226 Directory send OK.\r\n");
+    }
+  else
+    dprintf(client->fd, "425 Use PORT or PASV first.\r\n");
+}
+
+void	fn_dele(const char **cmds, t_client *client)
+{
+  if (cmds[1] && !remove(cmds[1]))
+    dprintf(client->fd, "250 Delete operation successful.\r\n");
+  else
+    dprintf(client->fd, "550 Delete operation failed.\r\n");
+}
+
+void	fn_noop(const char **cmds, t_client *client)
 {
   (void)cmds;
   dprintf(client->fd, "200 NOOP ok.\r\n");
-  return (1);
 }
 
-/*
-int	fn_cdup(const char **cmds, t_client *client)
+void	fn_help(const char **cmds, t_client *client)
 {
   (void)cmds;
-  (void)client;
-  return (!chdir(".."));
-  //return (fn_cwd("..", client));
+  dprintf(client->fd, "214-The following commands are recognized.\r\n");
+  dprintf(client->fd, "214 Help OK.\r\n");
 }
-*/
-
-/*
-int	fn_ls()
-{
-  //return 
-}
-*/
