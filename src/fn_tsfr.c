@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May 14 18:56:21 2016 Guillaume PROQUIN
-** Last update Sun May 15 18:01:02 2016 Guillaume PROQUIN
+** Last update Sun May 15 18:23:39 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -33,7 +33,6 @@ void			fn_tsfr(const char **cmds, t_client *client)
   if (client->mode == ACTV && !fn_connect(client, client->ip, client->port))
     fn_close(client, client->m_fd);
   while (fn[++i][0] && strcmp(fn[i][0], cmds[0]));
-  printf("%d\n", client->mode);
   if (client->mode && (f = fn[i][1]))
     (*f)(cmds, client, (fd != -1) ? fd : client->m_fd);
   else
