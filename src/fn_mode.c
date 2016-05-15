@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Fri May 13 17:11:20 2016 Guillaume PROQUIN
-** Last update Sun May 15 18:24:21 2016 Guillaume PROQUIN
+** Last update Sun May 15 23:06:11 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -108,6 +108,6 @@ void			fn_port(const char **cmds, t_client *client)
       while (ip[++i])
 	free(ip[i]);
       free(ip);
-      dprintf(client->fd, "200 PORT command successful. Consider using PASV.\r\n");
+      dprintf(client->fd, "200 PORT command successful.\r\n");
     }
 }
