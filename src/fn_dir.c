@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 12:46:42 2016 Guillaume PROQUIN
-** Last update Sat May 14 22:50:47 2016 Guillaume PROQUIN
+** Last update Sun May 15 14:48:00 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -21,7 +21,8 @@ void	fn_pwd(const char **cmds, t_client *client)
 
 void	fn_cwd(const char **cmds, t_client *client)
 {
-  if (chdir(strcmp("CWD", cmds[0]) ? ".." : cmds[1]))
+  if (!(((cmds[1] && !strcmp("CWD", cmds[0])) || !strcmp("CDUP", cmds[0])) \
+	&& !chdir(strcmp("CWD", cmds[0]) ? ".." : cmds[1])))
     dprintf(client->fd, "501 Failed to change directory.\r\n");
   else
     if (!strcmp("CWD", cmds[0]))

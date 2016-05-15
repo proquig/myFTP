@@ -5,15 +5,18 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May 14 18:56:21 2016 Guillaume PROQUIN
-** Last update Sat May 14 22:53:14 2016 Guillaume PROQUIN
+** Last update Sun May 15 18:01:02 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
 
-void			fn_tsfr(char **cmds, t_client *client)
+void			fn_tsfr(const char **cmds, t_client *client)
 {
   int			i;
-  void			(*f)(char**, t_client*);
+  int			fd;
+  struct sockaddr_in	s;
+  socklen_t		ss;
+  void			(*f)(const char**, t_client*, int);
   void			*fn[][2] = {
     {"LIST", &fn_list},
     {"RETR", &fn_retr},
@@ -21,26 +24,28 @@ void			fn_tsfr(char **cmds, t_client *client)
     {NULL, NULL}
   };
 
+  fd = -1;
+  ss = sizeof(s);
   i = -1;
+  if (client->mode == PASV && \
+      (fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
+    fn_close(client, fd);
+  if (client->mode == ACTV && !fn_connect(client, client->ip, client->port))
+    fn_close(client, client->m_fd);
   while (fn[++i][0] && strcmp(fn[i][0], cmds[0]));
+  printf("%d\n", client->mode);
   if (client->mode && (f = fn[i][1]))
-    (*f)(cmds, client);
+    (*f)(cmds, client, (fd != -1) ? fd : client->m_fd);
   else
     dprintf(client->fd, "425 Use PORT or PASV first.\r\n");
 }
 
-void			fn_list(const char **cmds, t_client *client)
+void			fn_list(const char **cmds, t_client *client, int fd)
 {
-  struct sockaddr_in	s;
-  socklen_t		ss;
   char			path[1024];
   int			old_fd;
-  int			fd;
 
-  ss = sizeof(s);
   dprintf(client->fd, "150 Here comes the directory listing.\r\n");
-  if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
-    return ;
   if (opendir(cmds[1] ? cmds[1] : getcwd(path, sizeof(path))))
     {
       old_fd = dup(1);
@@ -53,20 +58,14 @@ void			fn_list(const char **cmds, t_client *client)
   dprintf(client->fd, "226 Directory send OK.\r\n");
 }
 
-void			fn_retr(char **cmds, t_client *client)
+void			fn_retr(const char **cmds, t_client *client, int fd)
 {
-  struct sockaddr_in	s;
-  socklen_t		ss;
   char			buffer[BUFFER_SIZE];
-  int			fd;
   int			file_fd;
   int			size;
 
-  ss = sizeof(s);
   if (cmds[1] && (file_fd = open(cmds[1], O_RDONLY)) != -1)
     {
-      if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
-	return ;
       dprintf(client->fd, "150 Opening file %s.\r\n", cmds[1]);
       while ((size = read(file_fd, buffer, BUFFER_SIZE)))
 	write(fd, buffer, size);
@@ -78,21 +77,15 @@ void			fn_retr(char **cmds, t_client *client)
     dprintf(client->fd, "227 Failed to open file.\r\n");
 }
 
-void			fn_stor(char **cmds, t_client *client)
+void			fn_stor(const char **cmds, t_client *client, int fd)
 {
-  struct sockaddr_in	s;
-  socklen_t		ss;
   char			buffer[BUFFER_SIZE];
-  int			fd;
   int			file_fd;
   int			size;
 
-  ss = sizeof(s);
   if (cmds[1] \
       &&(file_fd = open(cmds[1], O_CREAT | O_TRUNC | O_WRONLY, 0600)) != -1)
     {
-      if ((fd = accept(client->m_fd, (struct sockaddr*)&s, &ss)) == -1)
-	return ;
       dprintf(client->fd, "150 Ok to send data.\r\n");
       while ((size = read(fd, buffer, BUFFER_SIZE)))
 	write(file_fd, buffer, size);

@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Tue May 10 14:28:54 2016 Guillaume PROQUIN
-** Last update Sat May 14 21:18:50 2016 Guillaume PROQUIN
+** Last update Sun May 15 18:01:38 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -20,6 +20,7 @@ void	*get_fn(const char *cmd, t_client *client)
     {"DELE", &fn_dele, (void*)-1},
     {"HELP", &fn_help, (void*)-1},
     {"NOOP", &fn_noop, (void*)-1},
+    {"PORT", &fn_port, (void*)-1},
     {"PASV", &fn_pasv, (void*)-1},
     {"LIST", &fn_tsfr, (void*)-1},
     {"RETR", &fn_tsfr, (void*)-1},
@@ -38,7 +39,7 @@ void	*get_fn(const char *cmd, t_client *client)
   return (client->is_logged ? NULL : (void*)-1);
 }
 
-void	exec_cmd(char *cmd, t_client *client)
+void	exec_cmd(const char *cmd, t_client *client)
 {
   char	**cmds;
   int	i;
