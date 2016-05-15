@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Fri May 13 17:11:20 2016 Guillaume PROQUIN
-** Last update Sun May 15 17:27:07 2016 Guillaume PROQUIN
+** Last update Sun May 15 18:24:21 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -62,6 +62,7 @@ void			fn_close(t_client *client, int fd)
 {
   close(client->m_fd);
   close(fd);
+  client->ip = NULL;
   client->m_fd = -1;
   client->port = -1;
   client->mode = NONE;
