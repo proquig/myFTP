@@ -5,7 +5,7 @@
 ** Login   <proqui_g@epitech.net>
 ** 
 ** Started on  Sat May 14 18:56:21 2016 Guillaume PROQUIN
-** Last update Sun May 15 18:23:39 2016 Guillaume PROQUIN
+** Last update Sun May 15 18:56:02 2016 Guillaume PROQUIN
 */
 
 #include "my_ftp.h"
@@ -73,7 +73,7 @@ void			fn_retr(const char **cmds, t_client *client, int fd)
       fn_close(client, fd);
     }
   else
-    dprintf(client->fd, "227 Failed to open file.\r\n");
+    dprintf(client->fd, "550 Failed to open file.\r\n");
 }
 
 void			fn_stor(const char **cmds, t_client *client, int fd)
@@ -93,5 +93,5 @@ void			fn_stor(const char **cmds, t_client *client, int fd)
       fn_close(client, fd);
     }
   else
-    dprintf(client->fd, "227 Could not create file.\r\n");
+    dprintf(client->fd, "550 Could not create file.\r\n");
 }
